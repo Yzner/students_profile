@@ -1,0 +1,4 @@
+/vendor
+/scripts/data_init/vendor
+/composer.json
+/composer.lock
