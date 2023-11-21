@@ -1,16 +1,16 @@
 <?php
 include_once("../db.php"); // Include the Database class file
-include_once("../town_city.php"); // Include the Student class file
+include_once("../province.php"); // Include the Student class file
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Fetch student data by ID from the database
     $db = new Database();
-    $town = new town_city($db);
-    $town_id = $town->read($id); // Implement the read method in the Student class
+    $province = new Province($db);
+    $province_id = $province->read($id); // Implement the read method in the Student class
 
-    if ($town_id) {
+    if ($province_id) {
         // The student data is retrieved, and you can pre-fill the edit form with this data.
     } else {
         echo "Student not found.";
@@ -26,10 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
     $db = new Database();
-    $town = new town_city($db);
+    $province = new Province($db);
 
     // Call the edit method to update the student data
-    if ($town->update($id, $data)) {
+    if ($province->update($id, $data)) {
         echo "Record updated successfully.";
     } else {
         echo "Failed to update the record.";
@@ -52,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="content">
     <h2>Edit Town/City Information</h2>
     <form action="" method="post">
-        
+        <input type="hidden" name="id" value="<?php echo $province_id['id']; ?>">
         
         <label for="name">Name:</label>
-        <input type="text" name="name" id="name" value="<?php echo $town_id['name']; ?>">
+        <input type="text" name="name" id="name" value="<?php echo $province_id['name']; ?>">
         
         <input type="submit" value="Update">
     </form>

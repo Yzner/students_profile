@@ -16,18 +16,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Instantiate the Database and Student classes
     $database = new Database();
-    $town = new town_city($database);
-    $town_id = $town->create($data);
+    $province = new Province($database);
+    $province_id = $province->create($data);
     
-    if ($town_id) {
+    if ($province_id) {
         // Student record successfully created
         
         // Retrieve student details from the form
-        $towncityDetailsData = [
-            'id' => $town_id, // Use the obtained student ID
+        $studentDetailsData = [
+            'student_id' => $province_id, // Use the obtained province ID as the student_id
             'name' => $_POST['name'],
             // Other student details fields
         ];
+        
 
         // Create student details linked to the student
         $studentDetails = new StudentDetails($database);
@@ -51,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
 
-    <title>Add Student Data</title>
+    <title>Add Province Data</title>
 </head>
 <body>
     <!-- Include the header and navbar -->
@@ -59,16 +60,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include('../includes/navbar.php'); ?>
 
     <div class="content">
-    <h1>Add Town/City</h1>
+    <h1>Add Province</h1>
     <form action="" method="post" class="centered-form">
+        <label for="id">ID:</label>
+        <input type="text" name="id" id="id" required>
 
         <label for="name">Name:</label>
-        <select name="town_city" id="town_city" required>
+        <select name="name" id="province" required>
         <?php
 
             $database = new Database();
-            $towns = new town_city($database);
-            $results = $towns->displayAll();
+            $province = new Province($database);
+            $results = $province->getAll();
             // echo print_r($results);
             foreach($results as $result)
             {
@@ -76,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         ?>
 
-        <input type="submit" value="Add Town/City">
+        <input type="submit" value="Add Province">
     </form>
     </div>
     
