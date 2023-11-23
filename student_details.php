@@ -12,7 +12,7 @@ class StudentDetails {
     public function create($data) {
         try {
             // Prepare the SQL INSERT statement
-            $sql = "INSERT INTO student_details(student_id, contact_number, street, zip_code, town_city, province) VALUES(:student_id, :contact_number, :street, :zip_code, :town_city,:province);";
+            $sql = "INSERT INTO school_db.student_details(student_id, contact_number, street, zip_code, town_city, province) VALUES(:student_id, :contact_number, :street, :zip_code, :town_city,:province);";
             $stmt = $this->db->getConnection()->prepare($sql);
 
             // Bind values to placeholders
@@ -24,7 +24,7 @@ class StudentDetails {
             $stmt->bindParam(':province', $data['province']);
 
             // Execute the INSERT query
-            $stmt->execute();
+            //$stmt->execute();
 
             // Check if the insert was successful
             return $stmt->rowCount() > 0;
@@ -37,21 +37,19 @@ class StudentDetails {
         
     }
 
-
-    // Other CRUD methods for student details
     public function read($id) {
         try {
             $connection = $this->db->getConnection();
 
-            $sql = "SELECT * FROM student_details WHERE id = :id";
+            $sql = "SELECT * FROM school_db.student_details WHERE id = :id";
             $stmt = $connection->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             // Fetch the student data as an associative array
-            $studentDetailsData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $studentDetails  = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            return $studentDetailsData;
+            return $studentDetails ;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             throw $e; // Re-throw the exception for higher-level handling
@@ -61,6 +59,7 @@ class StudentDetails {
     public function update($id, $data) {
         try {
             $sql = "UPDATE student_details SET
+                    id = :id,
                     student_id = :student_id,
                     contact_number = :contact_number,
                     street = :street,
@@ -71,13 +70,13 @@ class StudentDetails {
 
             $stmt = $this->db->getConnection()->prepare($sql);
             // Bind parameters
-            $stmt->bindValue(':id', $data['id']);
-            $stmt->bindParam(':student_id', $data['student_id']);
-            $stmt->bindParam(':contact_number', $data['contact_number']);
-            $stmt->bindParam(':street', $data['street']);
-            $stmt->bindParam(':zip_code', $data['zip_code']);
-            $stmt->bindParam(':town_city', $data['town_city']);
-            $stmt->bindParam(':province', $data['province']);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':student_id', $data['student_id']);
+            $stmt->bindValue(':contact_number', $data['contact_number']);
+            $stmt->bindValue(':street', $data['street']);
+            $stmt->bindValue(':zip_code', $data['zip_code']);
+            $stmt->bindValue(':town_city', $data['town_city']);
+            $stmt->bindValue(':province', $data['province']);
 
             // Execute the query
             $stmt->execute();
@@ -110,7 +109,8 @@ class StudentDetails {
 
     public function displayAll(){
         try {
-            $sql = "SELECT * FROM student_details LIMIT 10"; // Modify the table name to match your database
+            $sql = "SELECT student_number, first_name, last_name, middle_name, gender, birthday, student_id, contact_number, street, town_city, province, zip_code 
+            FROM school_db.students JOIN school_db.student_details ON students.id = student_details.student_id LIMIT 10"; // Modify the table name to match your database
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -121,6 +121,8 @@ class StudentDetails {
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
-}
+ //
 
+}
+//
 ?>
