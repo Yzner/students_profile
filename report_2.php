@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Report</title>
+    <title>Report 2</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
@@ -28,7 +28,7 @@ if ($conn->connect_error) {
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-2">
                     <div class="card text-center">
                         <div class="header">
                             <h4 class="title">The Count of Students Born in the Ranges 1990-1999 and 2000-2010</h4>

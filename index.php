@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Records</title>
+    <title>Students Born Every Month</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
@@ -22,8 +22,8 @@
             <div class="col-md-6">
                 <div class="card text-center">
                     <div class="header">
-                        <h4 class="title">Count of the Lowest Students in Each Province</h4>
-                        <p class="category">Student Counts by Province</p>
+                        <h4 class="title">Count of Students Born Every Month</h4>
+                        <p class="category">Born Every Month</p>
                     </div>
                     <div class="content">
                         <canvas id="myChartTopProvinces"></canvas>
@@ -42,19 +42,15 @@ if ($conn->connect_error) {
 // SQL Query to count the top 10 provinces with the most students
 $querylowProvinces = "
 SELECT
-p.name AS province,
-COUNT(s.id) AS num_students
+    MONTHNAME(MIN(s.birthday)) AS birth_month,
+    COUNT(s.id) AS num_students
 FROM
-students s
-JOIN
-student_details sd ON s.id = sd.student_id
-JOIN
-province p ON sd.province = p.id
+    students s
 GROUP BY
-p.name
+    MONTH(s.birthday)
 ORDER BY
-num_students ASC
-LIMIT 10;
+    MONTH(s.birthday);
+
 ";
 
 $resultlowProvinces = mysqli_query($conn, $querylowProvinces);
@@ -65,7 +61,7 @@ if (mysqli_num_rows($resultlowProvinces) > 0) {
 
     while ($row = mysqli_fetch_array($resultlowProvinces)) {
         $province_count_data[] = $row['num_students'];
-        $label_chart_data[] = $row['province'];
+        $label_chart_data[] = $row['birth_month'];
     }
 
     mysqli_free_result($resultlowProvinces);
@@ -96,7 +92,12 @@ if (mysqli_num_rows($resultlowProvinces) > 0) {
                                 type: 'bar',
                                 data: datalowProvinces,
                                 options: {
-                                    aspectRatio: 2.5,
+
+                                    scales: {
+                                        x: {
+                                            beginAtZero: true
+                                        }
+                                    }
                                 }
                             };
 
@@ -112,8 +113,6 @@ if (mysqli_num_rows($resultlowProvinces) > 0) {
         </div>
     </div>
 </div>
-
-
         <!-- Include the footer -->
     <?php include('templates/footer.html'); ?>
 </body>

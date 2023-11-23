@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Records</title>
+    <title>Report 2</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
@@ -19,11 +19,11 @@
     <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card text-center">
                     <div class="header">
-                        <h4 class="title">Top 10 Highest birth years</h4>
-                        <p class="category">Student Birth Years</p>
+                        <h4 class="title">Count of the Lowest Students in Each Province</h4>
+                        <p class="category">Student Counts by Province</p>
                     </div>
                     <div class="content">
                         <canvas id="myChartTopProvinces"></canvas>
@@ -42,14 +42,18 @@ if ($conn->connect_error) {
 // SQL Query to count the top 10 provinces with the most students
 $querylowProvinces = "
 SELECT
-    CONCAT(s.last_name, ' ', s.first_name) AS full_name,
-    s.birthday
+p.name AS province,
+COUNT(s.id) AS num_students
 FROM
-    students s
-WHERE
-    s.gender = 1 
+students s
+JOIN
+student_details sd ON s.id = sd.student_id
+JOIN
+province p ON sd.province = p.id
+GROUP BY
+p.name
 ORDER BY
-    s.birthday DESC
+num_students ASC
 LIMIT 10;
 ";
 
@@ -60,8 +64,8 @@ if (mysqli_num_rows($resultlowProvinces) > 0) {
     $label_chart_data = array();
 
     while ($row = mysqli_fetch_array($resultlowProvinces)) {
-        $province_count_data[] = $row['full_name'];
-        $label_chart_data[] = $row['birthday'];
+        $province_count_data[] = $row['num_students'];
+        $label_chart_data[] = $row['province'];
     }
 
     mysqli_free_result($resultlowProvinces);
